@@ -1,0 +1,40 @@
+@import url(http://weloveiconfonts.com/api/?family=fontawesome);
+
+/* fontawesome */
+[class*="fontawesome-"]:before {
+  font-family: 'FontAwesome', sans-serif;
+}
+
+@font-face { font-family:AkzidenzGroteskRegular; src: url("/screensys/img/screen_mat/idealab/AkzidenzGroteskRegular.otf") format("opentype");  } 
+
+.icon {
+	font-size:7.5em;
+	color:#FFFFFF;
+}
+
+.icon-title {
+	font-size:2.5em;
+}
+
+.Redner {
+	font-size:1.5em;	
+	font-weight:bold;
+}
+
+.Firma {
+	margin-top:-5px;
+	font-size:1.2em;
+	color:#FFFFFF;	
+}
+
+.Titel {
+	font-size:1em;	
+	line-height:0.95em;
+}
+
+.RaumUhr {
+	font-size:0.9em;
+	line-height:0.9em;	
+	color:#FFFFFF;
+	vertical-align:middle;
+}

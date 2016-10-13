@@ -1,0 +1,61 @@
+@font-face { font-family:AkzidenzGroteskRegular; src: url("/screensys/img/screen_mat/idealab/AkzidenzGroteskRegular.otf") format("opentype");  } 
+
+html, body {
+	margin:0px;
+	padding:0px;
+	background:#000000;
+	font-family:AkzidenzGroteskRegular;
+}
+
+#screenbody {
+	width:100%;
+	height:100%;
+}
+
+#il_logo {
+	position:absolute;
+	top:540px;
+	left:220px;
+	width:200px;
+}
+
+#whu_logo {
+	position:absolute;
+	top:610px;
+	left:220px;
+	width:200px;
+}
+
+#arrow_right {
+	position:absolute;
+	top:150px;
+	right:215px;
+	width:200px;
+}
+
+#arrow_left {
+	position:absolute;
+	top:150px;
+	left:210px;
+	width:200px;
+}
+
+#middle-window {
+	position:absolute;
+	top:230px;
+	left:310px;
+	width:450px;
+	height:220px;
+	padding:0px;
+	margin:0px;
+	color:#FFFFFF;
+}
+
+
+il, .color-il {
+	color:#8bc520;
+}
+
+purp, .color-purp {
+	color:#7F2DDF;
+}
