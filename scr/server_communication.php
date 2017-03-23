@@ -7,7 +7,7 @@
 			$name = $_GET["screen_name"];
 			$typ = $_GET["screen_typ"];
 			$temp_id = $_GET["temp_id"];
-			$sql = mysqli_query($con, "INSERT INTO screensys_screens(name,typ,temp_id,lst_call) VALUES ('$name','$typ','$temp_id','0')") or die(mysqli_error());
+			$sql = mysqli_query($con, "INSERT INTO screensys_screens(name,typ,temp_id,lst_call) VALUES ('$name','$typ','$temp_id','0')") or die(mysqli_error($con));
 			if($sql) {
 				header('Location: ../?p=screen&m=sea');
 			} else {
@@ -17,8 +17,8 @@
 		case "speichern_einstellungen":
 			$event = $_GET["event_code"];
 			$code = $_GET["active_code"];
-			mysqli_query($con, "UPDATE screensys_settings SET value = '$code' WHERE setting = 'system-available'") or die(mysqli_error());
-			$sqlq = mysqli_query($con, "UPDATE screensys_settings SET value = '$event' WHERE setting = 'screen-design' OR setting = 'beamer-design'") or die(mysqli_error());
+			mysqli_query($con, "UPDATE screensys_settings SET value = '$code' WHERE setting = 'system-available'") or die(mysqli_error($con));
+			$sqlq = mysqli_query($con, "UPDATE screensys_settings SET value = '$event' WHERE setting = 'screen-design' OR setting = 'beamer-design'") or die(mysqli_error($con));
 			if($sqlq) {
 				header('Location: ../?p=einstellungen&m=eeg');
 			} else {
@@ -31,16 +31,16 @@
 			$typ = $_GET["template_typ"];
 			$inhalt = $_GET["template_inhalt"];
 			$ucnext = $_GET["template_ucnext"];
-			$sql = mysqli_query($con, "SELECT temp_id FROM screensys_temps WHERE temp_id = '$temp_id'") or die(mysqli_error());
+			$sql = mysqli_query($con, "SELECT temp_id FROM screensys_temps WHERE temp_id = '$temp_id'") or die(mysqli_error($con));
 			if(mysqli_num_rows($sql) >= 1) { // prüfen ob Template aktualisi>eren oder neues Template anlegen
-				$sql = mysqli_query($con, "UPDATE screensys_temps SET name='$name', typ='$typ', inhalt='$inhalt', ucnext = '$ucnext' WHERE temp_id = '$temp_id'") or die(mysqli_error());
+				$sql = mysqli_query($con, "UPDATE screensys_temps SET name='$name', typ='$typ', inhalt='$inhalt', ucnext = '$ucnext' WHERE temp_id = '$temp_id'") or die(mysqli_error($con));
 				if($sql) {
 					header('Location: ../?p=template&m=teu');
 				} else {
 					header('Location: ../?p=template&m=fa');
 				}
 			} else { // neues Template
-				$sql = mysqli_query($con, "INSERT INTO screensys_temps(name,typ,inhalt,ucnext) VALUES ('$name','$typ','$inhalt','$ucnext')") or die(mysqli_error());
+				$sql = mysqli_query($con, "INSERT INTO screensys_temps(name,typ,inhalt,ucnext) VALUES ('$name','$typ','$inhalt','$ucnext')") or die(mysqli_error($con));
 				if($sql) {
 					header('Location: ../?p=template&m=tea');
 				} else {
@@ -50,7 +50,7 @@
 			break;
 		case "temp_laden":
 			$temp_id = $_GET["temp_id"];
-				$sql = mysqli_query($con, "SELECT * FROM screensys_temps WHERE temp_id = '$temp_id'") or die(mysqli_error());
+				$sql = mysqli_query($con, "SELECT * FROM screensys_temps WHERE temp_id = '$temp_id'") or die(mysqli_error($con));
 				if(mysqli_num_rows($sql) >= 1) {
 					while($row = mysqli_fetch_array($sql)) {
 						echo json_encode(array("id" => $row[0],"name" => $row[1],"typ" => $row[2],"inhalt" => $row[3],"ucnext" => $row[4]));
@@ -61,13 +61,13 @@
 			break;
 		case "temp_loeschen":
 			$temp_id = $_GET["temp_id"];
-				$sql = mysqli_query($con, "DELETE FROM screensys_temps WHERE temp_id = '$temp_id'") or die(mysqli_error());
+				$sql = mysqli_query($con, "DELETE FROM screensys_temps WHERE temp_id = '$temp_id'") or die(mysqli_error($con));
 				if($sql) {
 					echo json_encode(array("response" => "positive"));
 				}
 			break;
 		case "tabelle_laden":
-			$sql = mysqli_query($con, "SELECT temp_id,name,typ FROM screensys_temps ORDER BY name ASC") or die(mysqli_error());
+			$sql = mysqli_query($con, "SELECT temp_id,name,typ FROM screensys_temps ORDER BY name ASC") or die(mysqli_error($con));
 			$temps = array();
 			while($row = mysqli_fetch_array($sql)) {
 				$temps[] = $row;
@@ -85,7 +85,7 @@
 			}
 
 
-			$sql = mysqli_query($con, "SELECT * FROM screensys_screens ORDER BY name") or die(mysqli_error());
+			$sql = mysqli_query($con, "SELECT * FROM screensys_screens ORDER BY name") or die(mysqli_error($con));
 			$output = array();
 			while($row = mysqli_fetch_array($sql)) {
 				$output[] = $row;
@@ -94,7 +94,8 @@
 				for($i=0;$i<=count($output)-1;$i++) {
 					if($output[$i]["typ"] == "bildschirm") {$typ = "<span class=\"spanicon fontawesome-desktop\"></span>";} else {$typ = "<span class=\"spanicon fontawesome-facetime-video\"></span>";}
 					if(date("d.m.Y",time()) == date("d.m.Y", $output[$i]["lst_call"])) {$lst_call = date("H:i:s",$output[$i]["lst_call"]).", Heute";} elseif($output[$i]["lst_call"] == 0) {$lst_call = "noch nie";} else {$lst_call = date("H:i:s, d.m.Y",$output[$i]["lst_call"]);}
-					if($output[$i]["lst_call"] < (time()-15)) {$status = "<b><red><span class=\"spanicon fontawesome-remove\"></span></red></b>"; send_mail($output[$i]["screen_id"]);} else {$status = "<b><green><span class=\"spanicon fontawesome-ok\"></span></green></b>";}
+					//if($output[$i]["lst_call"] < (time()-15)) {$status = "<b><red><span class=\"spanicon fontawesome-remove\"></span></red></b>"; send_mail($output[$i]["screen_id"]);} else {$status = "<b><green><span class=\"spanicon fontawesome-ok\"></span></green></b>";}
+					$status = "<b><green><span class=\"spanicon fontawesome-ok\"></span></green></b>";
 				$output_tbl .= "<tr><td>".$output[$i]["screen_id"]."</td><td><a target=\"_blank\" href=\"".($output[$i]["typ"] == "bildschirm"?"screen":"beamer").".php?s=".$output[$i]["screen_id"]."\">".$output[$i]["name"]."</a></td><td>".$typ."</td><td>".$lst_call."</td><td>".$status."</td><td><select id=\"screen_".$output[$i]["screen_id"]."\">";
 					$temps_all = "";
 					for($x=0;$x<=count($temps)-1;$x++) {
@@ -114,17 +115,17 @@
 			$screen_id = $_GET["screen_id"];
 			$temp_id = $_GET["temp_id"];
 			if($screen_id == "bild_all") {
-				$sql = mysqli_query($con, "UPDATE screensys_screens SET temp_id = '$temp_id', lst_call = '0' WHERE typ = 'bildschirm'") or die(mysqli_error());
+				$sql = mysqli_query($con, "UPDATE screensys_screens SET temp_id = '$temp_id', lst_call = '0' WHERE typ = 'bildschirm'") or die(mysqli_error($con));
 				while($row = mysqli_fetch_array($sql)) {
 					$screens[] = $row[0];
 				}
 			} elseif($screen_id == "beamer_all") {
-				$sql = mysqli_query($con, "UPDATE screensys_screens SET temp_id = '$temp_id', lst_call = '0' WHERE typ = 'beamer'") or die(mysqli_error());
+				$sql = mysqli_query($con, "UPDATE screensys_screens SET temp_id = '$temp_id', lst_call = '0' WHERE typ = 'beamer'") or die(mysqli_error($con));
 				while($row = mysqli_fetch_array($sql)) {
 					$screens[] = $row[0];
 				}
 			} else {
-				$sql = mysqli_query($con, "UPDATE screensys_screens SET temp_id = '$temp_id', lst_call = 0 WHERE screen_id = '$screen_id'") or die(mysqli_error());
+				$sql = mysqli_query($con, "UPDATE screensys_screens SET temp_id = '$temp_id', lst_call = 0 WHERE screen_id = '$screen_id'") or die(mysqli_error($con));
 			}
 			if($sql) {
 				header("Location: ../?p=uebersicht&m=teu");
@@ -132,7 +133,7 @@
 			break;
 		case "screen_loeschen":
 			$screen_id = $_GET["screen_id"];
-			$sql = mysqli_query($con, "DELETE FROM screensys_screens WHERE screen_id = '$screen_id'") or die(mysqli_error());
+			$sql = mysqli_query($con, "DELETE FROM screensys_screens WHERE screen_id = '$screen_id'") or die(mysqli_error($con));
 			if($sql) {
 				header("Location: ../?p=uebersicht&m=seg");
 			}
@@ -140,16 +141,16 @@
 		case "screen_laden":
 			$uc_next = ""; $temp_code = "";
 			$screen_id = $_GET["screen_id"];
-			$sql = mysqli_query($con, "SELECT temp_id FROM screensys_screens WHERE screen_id = '$screen_id'") or die(mysqli_error());
+			$sql = mysqli_query($con, "SELECT temp_id FROM screensys_screens WHERE screen_id = '$screen_id'") or die(mysqli_error($con));
 			while($row = mysqli_fetch_array($sql)) {
 				$temp_id = $row[0];
 			}
-			$sql = mysqli_query($con, "SELECT inhalt,ucnext FROM screensys_temps WHERE temp_id = '$temp_id'") or die(mysqli_error());
+			$sql = mysqli_query($con, "SELECT inhalt,ucnext FROM screensys_temps WHERE temp_id = '$temp_id'") or die(mysqli_error($con));
 			while($row = mysqli_fetch_array($sql)) {
 				$temp_code = $row[0];
 				$uc_next = $row[1];
 			}
-			$sql = mysqli_query($con, "UPDATE screensys_screens SET lst_call = ".time()." WHERE screen_id = '$screen_id'") or die(mysqli_error());
+			$sql = mysqli_query($con, "UPDATE screensys_screens SET lst_call = ".time()." WHERE screen_id = '$screen_id'") or die(mysqli_error($con));
 			if($sql) {
 				echo json_encode(array("inhalt" => $temp_code,"ucnext" => $uc_next,"time" => date("d.m.Y, H:i:s",time())));
 			}

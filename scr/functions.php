@@ -1,8 +1,6 @@
 <?php
 	function naechste_id($typ) {
-		$con = mysqli_connect("localhost", 'root', 'somepassword')  or die ("Keine Verbindung zum MySQL-Server moeglich.");
-		mysqli_select_db($con, 'screensys') or die ("Die Datenbank '".$dbName."' existiert nicht.");
-		mysqli_query($con, "SET NAMES 'utf8'");
+		global $con;
 		if($typ == 'screen') {
 			$sql = mysqli_query($con, "SELECT screen_id FROM screensys_screens ORDER BY screen_id DESC LIMIT 1") or die(mysqli_error($con));
 				while($row = mysqli_fetch_array($sql)) {
@@ -17,9 +15,7 @@
 	}
 
 	function temps_laden() {
-		$con = mysqli_connect("localhost", 'root', 'somepassword')  or die ("Keine Verbindung zum MySQL-Server moeglich.");
-		mysqli_select_db($con, 'screensys') or die ("Die Datenbank '".$dbName."' existiert nicht.");
-		mysqli_query($con, "SET NAMES 'utf8'");
+		global $con;
 		$sql = mysqli_query($con, "SELECT * FROM screensys_temps ORDER BY name ASC") or die(mysqli_error($con));
 		$output = array();
 		while($row = mysqli_fetch_array($sql)) {
@@ -34,6 +30,7 @@
 	}
 
 	function temp_liste($temp_array,$option) {
+		global $con;
 		$output = "";
 		switch ($option) {
 			case "":
@@ -51,29 +48,25 @@
 	}
 
 	function send_mail($screen_id) {
-		$con = mysqli_connect("localhost", 'root', 'somepassword')  or die ("Keine Verbindung zum MySQL-Server moeglich.");
-		mysqli_select_db($con, 'screensys') or die ("Die Datenbank '".$dbName."' existiert nicht.");
-		mysqli_query($con, "SET NAMES 'utf8'");
-		$sqlq = mysqli_query($con, "SELECT notified FROM screensys_screens WHERE screen_id = '$screen_id'") or die(mysqli_error($con));
-		while($row = mysqli_fetch_array($sqlq)) {
-			$screen_notified = $row[0];
-		}
-		mysqli_query($con, "UPDATE screensys_screens SET notified = 1 WHERE screen_id = '$screen_id'");
-
-		$sql = mysqli_query($con, "SELECT name FROM screensys_screens WHERE screen_id = '$screen_id'") or die(mysqli_error($con));
-		while($row = mysqli_fetch_array($sql)) {
-			$screen_name = $row[0];
-		}
-		$to = "daniel.pesch@whu.edu";
-		$subject = "SCREEN SYS v2 - Bildschirm '".$screen_name."' - AUSGEFALLEN";
-		$msg = "Der Bildschirm mit der ID ".$screen_id." und dem Namen ".$screen_name." ist ausgefallen! Um ".date("H:i:s, d.m.Y",time());
-		if($screen_notified == 0) mail($to,$subject,$msg);
+		global $con;
+		// $sqlq = mysqli_query($con, "SELECT notified FROM screensys_screens WHERE screen_id = '$screen_id'") or die(mysqli_error($con));
+		// while($row = mysqli_fetch_array($sqlq)) {
+		// 	$screen_notified = $row[0];
+		// }
+		// mysqli_query($con, "UPDATE screensys_screens SET notified = 1 WHERE screen_id = '$screen_id'");
+		//
+		// $sql = mysqli_query($con, "SELECT name FROM screensys_screens WHERE screen_id = '$screen_id'") or die(mysqli_error($con));
+		// while($row = mysqli_fetch_array($sql)) {
+		// 	$screen_name = $row[0];
+		// }
+		// $to = "daniel.pesch@whu.edu";
+		// $subject = "SCREEN SYS v2 - Bildschirm '".$screen_name."' - AUSGEFALLEN";
+		// $msg = "Der Bildschirm mit der ID ".$screen_id." und dem Namen ".$screen_name." ist ausgefallen! Um ".date("H:i:s, d.m.Y",time());
+		// if($screen_notified == 0) mail($to,$subject,$msg);
 	}
 
 	function lade_temp_notizen($screen_design) {
-		$con = mysqli_connect("localhost", 'root', 'somepassword')  or die ("Keine Verbindung zum MySQL-Server moeglich.");
-		mysqli_select_db($con, 'screensys') or die ("Die Datenbank '".$dbName."' existiert nicht.");
-		mysqli_query($con, "SET NAMES 'utf8'");
+		global $con;
 		$output = "";
 		$sql = mysqli_query($con, "SELECT design_notes FROM screensys_designs WHERE design_name = '$screen_design' AND design_typ = 'screen'") or die(mysqli_error($con));
 		while($row = mysqli_fetch_array($sql)) {

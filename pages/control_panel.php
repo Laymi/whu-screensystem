@@ -1,6 +1,6 @@
 <?php
-error_reporting(-1);
-ini_set('display_errors', 'On');
+	// DB Verbindung
+	require_once(__DIR__ ."/../scr/db_connect.php");
 
 	// ggf. Seite auswerten
 		$page = "uebersicht"; if(isset($_GET["p"])) $page = $_GET["p"];
@@ -43,7 +43,7 @@ ini_set('display_errors', 'On');
 			$screen_design = $row[0];
 		}
 	?>
-		<link href='css/screens/<?=$screen_design?>.css' rel='stylesheet' type='text/css'>
+		<link href='css/screens/<?php echo($screen_design) ?>.css' rel='stylesheet' type='text/css'>
 	<?php } ?>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script typ="text/javascript" src="scr/javascript.js"></script>

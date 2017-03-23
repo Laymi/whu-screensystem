@@ -4,23 +4,25 @@
 			$(obj).val('').css('color','#4D4D4D');
 		}
 	}
-	
+
 	var reloadActive = true;
 	function uebersicht_laden() {
 		if(reloadActive) {
+			console.log('asd');
 			$.get("scr/server_communication.php?befehl=tabelle_laden",function(data) {
+				console.log('data ' + JSON.stringify(data));
 				$('.table-uebersicht').html(''+data.tabelle+'');
 				$('.letzte_akt').html('<span class="spanicon cursor reloadActivebutton fontawesome-refresh"></span> - <i>'+data.time+'</i>');
 			},"json");
 		}
 	}
-	
+
 	function input_blur(obj,default_val) {
 		if($(obj).val() == '' || $(obj).val() == default_val) {
 			$(obj).val(default_val).css('color','#C1C1C1');
 		}
 	}
-	
+
 	function temp_laden(temp_id) {
 		$.get('scr/server_communication.php?befehl=temp_laden&temp_id='+temp_id,function(data) {
 		if(data.name != 'false') {
@@ -47,15 +49,15 @@
 		}
 		},"json");
 	}
-	
+
 	function temp_loeschen(temp_id) {
 		$.get('scr/server_communication.php?befehl=temp_loeschen&temp_id='+temp_id,function(data) {
 		if(data.response == 'positive') {
 			window.location.href='?p=template&m=teg';
 		}
-		},"json");	
+		},"json");
 	}
-	
+
     function pasteIntoInput(el, text) {
         el.focus();
         var val = el.value;

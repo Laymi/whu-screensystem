@@ -23,7 +23,7 @@
 			<b>Templates Liste</b><br/>
 			<?php $temps = temps_laden(); ?>
 			<select id="temps_list" name="temp_id" class="input_select" size="50">
-				<option selected value="leer" onclick="temp_laden('<? echo $naechste_id; ?>');"><span style="color:#B38E59;">Neues Template</span></option>
+				<option selected value="leer" onclick="temp_laden('<?php echo $naechste_id; ?>');"><span style="color:#B38E59;">Neues Template</span></option>
 				<?php echo temp_liste($temps,'onclick'); ?>
 			</select><br/>
 			<div id="temp_speichern" class="input_button" onClick="$('form#neues_template').submit();"><span class="spanicon green_hover fontawesome-save"></span></div> <div id="templ_loeschen" class="input_button" onClick="if($('#temps_list').has('[selected]') && $('#temps_list').val() != 'leer') {if (confirm('Template wirklich löschen?')) temp_loeschen($('#temps_list').val());}"><span class="spanicon red_hover fontawesome-trash"></span></div>

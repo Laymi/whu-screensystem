@@ -1,4 +1,4 @@
-<?
+<?php
 	// DB Verbindung
 	require_once("scr/db_connect.php");
 	// System Online?
@@ -32,20 +32,20 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Beamer #<?=$screen_id?></title>
+		<title>Beamer #<?php echo($screen_id) ?></title>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700italic' rel='stylesheet' type='text/css'>
-		<link href='css/beamer_stylesheet.css' rel='stylesheet' type='text/css'>	
-		<link href='css/beamer/<?=$screen_design?>.css' rel='stylesheet' type='text/css'>
+		<link href='css/beamer_stylesheet.css' rel='stylesheet' type='text/css'>
+		<link href='css/beamer/<?php echo($screen_design) ?>.css' rel='stylesheet' type='text/css'>
 		<script src="scr/jquery.js"></script>
 		<script typ="text/javascript" src="scr/beamer_javascript.js"></script>
 		<script typ="text/javascript">
 			$(document).ready(function() {
-				screen_laden(<?=$screen_id?>);
+				screen_laden(<?php echo($screen_id) ?>);
 				var ResInterval = window.setInterval(function () {
-					var screen = screen_laden(<?=$screen_id?>);
+					var screen = screen_laden(<?php echo($screen_id) ?>);
 				},10000);
 			});
 		</script>
 	</head>
-		<? echo $design_code; ?>
+		<?php echo $design_code; ?>
 </html>
